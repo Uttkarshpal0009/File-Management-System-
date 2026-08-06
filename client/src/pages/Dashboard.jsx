@@ -59,7 +59,7 @@ function Dashboard() {
 
           <div>
             <h1 className="text-4xl font-black bg-gradient-to-r from-cyan-300 via-blue-400 to-blue-600 bg-clip-text text-transparent">
-              Cloud Vault
+              UploDrive
             </h1>
 
             <p className="text-blue-200 mt-1">
