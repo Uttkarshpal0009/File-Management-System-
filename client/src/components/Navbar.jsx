@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-
+import logo from "../assets/logo.png";
 function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -14,12 +14,17 @@ function Navbar() {
     <nav className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         
-        <Link
-          to="/"
-          className="text-2xl font-bold text-indigo-600"
-        >
-          Auth First
-        </Link>
+       <Link to="/" className="flex items-center gap-3">
+  <img
+    src={logo}
+    alt="UploDrive Logo"
+    className="h-12 w-12"
+  />
+
+  <span className="text-2xl font-bold text-black">
+    Uplo<span className="text-blue-500">Drive</span>
+  </span>
+</Link>
 
         <div className="flex items-center gap-5">
 
