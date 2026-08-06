@@ -1,4 +1,11 @@
-import { FaFileAlt, FaDownload, FaTrash } from "react-icons/fa";
+import {
+  FaFileAlt,
+  FaDownload,
+  FaTrash,
+  FaExternalLinkAlt,
+  FaFilePdf,
+  FaImage,
+} from "react-icons/fa";
 
 function FileCard({ file, onDelete }) {
   const formatSize = (size) => {
@@ -7,44 +14,99 @@ function FileCard({ file, onDelete }) {
     return (size / (1024 * 1024)).toFixed(2) + " MB";
   };
 
+  const isImage = file.fileType?.startsWith("image/");
+  const isPDF = file.fileType === "application/pdf";
+
   return (
-    <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-5 border border-gray-100">
+    <div className="bg-slate-900/70 backdrop-blur-xl border border-blue-500/20 rounded-3xl overflow-hidden shadow-xl hover:shadow-blue-600/20 transition duration-300">
 
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+      {/* Preview */}
+      <div className="h-64 bg-slate-950 flex items-center justify-center">
 
-        <div className="flex items-center gap-4 min-w-0">
+        {isImage ? (
+          <img
+            src={file.fileUrl}
+            alt={file.fileName}
+            className="w-full h-full object-cover"
+          />
+        ) : isPDF ? (
+          <iframe
+            src={file.fileUrl}
+            title={file.fileName}
+            className="w-full h-full bg-white"
+          />
+        ) : (
+          <div className="flex flex-col items-center gap-3 text-blue-300">
 
-          <div className="w-14 h-14 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 flex items-center justify-center flex-shrink-0">
-            <FaFileAlt className="text-white text-2xl" />
+            <FaFileAlt size={70} />
+
+            <p>No Preview Available</p>
+
+          </div>
+        )}
+
+      </div>
+
+      {/* Content */}
+      <div className="p-6">
+
+        <div className="flex items-start gap-4">
+
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 flex items-center justify-center">
+
+            {isPDF ? (
+              <FaFilePdf className="text-white text-2xl" />
+            ) : isImage ? (
+              <FaImage className="text-white text-2xl" />
+            ) : (
+              <FaFileAlt className="text-white text-2xl" />
+            )}
+
           </div>
 
-          <div className="min-w-0">
-            <h3 className="font-bold text-lg truncate">
+          <div className="flex-1 min-w-0">
+
+            <h3 className="font-bold text-lg text-white truncate">
               {file.fileName}
             </h3>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-blue-200 text-sm mt-1">
               {formatSize(file.fileSize)}
             </p>
+
           </div>
 
         </div>
 
-        <div className="flex flex-wrap gap-3">
+        <div className="grid grid-cols-3 gap-3 mt-6">
 
+          {/* Open */}
           <a
             href={file.fileUrl}
             target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl transition"
           >
-            <FaDownload />
-            View
+            <FaExternalLinkAlt />
+            Open
           </a>
 
+          {/* Download */}
+          <a
+            href={file.fileUrl}
+            download={file.fileName}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white py-3 rounded-xl transition"
+          >
+            <FaDownload />
+            Download
+          </a>
+
+          {/* Delete */}
           <button
             onClick={() => onDelete(file._id)}
-            className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl transition"
+            className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white py-3 rounded-xl transition"
           >
             <FaTrash />
             Delete
