@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
+import { FaCloudUploadAlt } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
-import logo from "../assets/logo.png";
+
 function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -11,62 +12,76 @@ function Navbar() {
   };
 
   return (
-    <nav className="bg-white shadow-md">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        
-       <Link to="/" className="flex items-center gap-3">
-  <img
-    src={logo}
-    alt="UploDrive Logo"
-    className="h-12 w-12"
-  />
+    <nav className="bg-black/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
 
-  <span className="text-2xl font-bold text-black">
-    Uplo<span className="text-blue-500">Drive</span>
-  </span>
-</Link>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
 
-        <div className="flex items-center gap-5">
+          {/* Logo */}
+          <Link
+            to="/"
+            className="flex items-center gap-3"
+          >
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/40">
+              <FaCloudUploadAlt className="text-white text-2xl" />
+            </div>
 
-          {!user ? (
-            <>
-              <Link
-                to="/login"
-                className="text-gray-700 hover:text-indigo-600"
-              >
-                Login
-              </Link>
+            <div>
+              <h1 className="text-2xl font-bold text-white">
+                Uplo<span className="text-cyan-400">Drive</span>
+              </h1>
 
-              <Link
-                to="/register"
-                className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
-              >
-                Register
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link
-                to="/dashboard"
-                className="text-gray-700 hover:text-indigo-600"
-              >
-                Dashboard
-              </Link>
+              <p className="text-xs text-gray-400">
+                Secure Cloud Storage
+              </p>
+            </div>
+          </Link>
 
-              <span className="font-semibold">
-                {user.name}
-              </span>
+          {/* Right Side */}
+          <div className="flex flex-wrap justify-center items-center gap-3">
 
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-              >
-                Logout
-              </button>
-            </>
-          )}
+            {!user ? (
+              <>
+                <Link
+                  to="/login"
+                  className="text-gray-300 hover:text-cyan-400 transition"
+                >
+                  Login
+                </Link>
+
+                <Link
+                  to="/register"
+                  className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-5 py-2 rounded-xl hover:scale-105 transition"
+                >
+                  Register
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/dashboard"
+                  className="text-gray-300 hover:text-cyan-400 transition"
+                >
+                  Dashboard
+                </Link>
+
+                <span className="text-white font-medium">
+                  {user.name}
+                </span>
+
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl transition"
+                >
+                  Logout
+                </button>
+              </>
+            )}
+
+          </div>
 
         </div>
+
       </div>
     </nav>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import UploadForm from "../components/UploadForm";
@@ -16,117 +16,173 @@ function Dashboard() {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch all files
   const fetchFiles = async () => {
     try {
-      console.log("Fetching files...");
-
       const data = await getFiles();
-
-      console.log("Files:", data);
-
       setFiles(data.files || []);
-    } catch (error) {
-      console.error("Fetch Error:", error);
-      alert(error.response?.data?.message || "Failed to load files");
+    } catch (e) {
+      alert(e.response?.data?.message || "Failed to load files");
     } finally {
       setLoading(false);
     }
   };
 
-  //useEffect(() => {
-  //  fetchFiles();
- // }, []);
+  useEffect(() => {
+    fetchFiles();
+  }, []);
 
-  // Upload file
   const handleUpload = async (selectedFile) => {
-    try {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
+    const formData = new FormData();
+    formData.append("file", selectedFile);
 
-      const data = await uploadFile(formData);
-
-      alert(data.message);
-
-      fetchFiles();
-    } catch (error) {
-      console.error(error);
-
-      alert(error.response?.data?.message || "Upload Failed");
-    }
+    await uploadFile(formData);
+    fetchFiles();
   };
 
-  // Delete file
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this file?"
-    );
+    if (!window.confirm("Delete this file?")) return;
 
-    if (!confirmDelete) return;
-
-    try {
-      const data = await deleteFile(id);
-
-      alert(data.message);
-
-      fetchFiles();
-    } catch (error) {
-      console.error(error);
-
-      alert(error.response?.data?.message || "Delete Failed");
-    }
-  };
-
-  // Logout
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
+    await deleteFile(id);
+    fetchFiles();
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-black via-slate-950 to-blue-950 text-white">
 
-      {/* Header */}
-      <div className="bg-white shadow">
-        <div className="max-w-6xl mx-auto flex justify-between items-center px-6 py-4">
+      {/* Background Glow */}
+      <div className="fixed top-0 left-0 w-96 h-96 bg-blue-600/20 blur-[180px] rounded-full"></div>
+      <div className="fixed bottom-0 right-0 w-96 h-96 bg-cyan-500/20 blur-[180px] rounded-full"></div>
+
+      {/* Navbar */}
+      <header className="sticky top-0 z-50 backdrop-blur-2xl bg-black/30 border-b border-blue-500/20">
+        <div className="max-w-7xl mx-auto flex justify-between items-center px-6 lg:px-10 py-5">
 
           <div>
-            <h1 className="text-3xl font-bold">
-              File Management System
+            <h1 className="text-4xl font-black bg-gradient-to-r from-cyan-300 via-blue-400 to-blue-600 bg-clip-text text-transparent">
+              Cloud Vault
             </h1>
 
-            <p className="text-gray-500">
-              Welcome, {user?.name}
+            <p className="text-blue-200 mt-1">
+              Welcome back, <span className="font-semibold">{user?.name}</span>
             </p>
           </div>
 
           <button
-            onClick={handleLogout}
-            className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg"
+            onClick={() => {
+              logout();
+              navigate("/login");
+            }}
+            className="bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 rounded-xl font-semibold hover:scale-105 transition duration-300 shadow-lg shadow-blue-600/30"
           >
             Logout
           </button>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-6 lg:px-10 py-10">
+
+        {/* Top Cards */}
+        <div className="grid lg:grid-cols-3 gap-8 mb-10">
+
+          {/* Upload */}
+          <div className="rounded-3xl bg-white/5 backdrop-blur-xl border border-blue-500/20 p-8 shadow-2xl">
+
+            <h2 className="text-2xl font-bold mb-6">
+              Upload Files
+            </h2>
+
+            <UploadForm onUpload={handleUpload} />
+
+          </div>
+
+          {/* Stats */}
+          <div className="lg:col-span-2 rounded-3xl overflow-hidden bg-gradient-to-r from-blue-700 via-blue-600 to-cyan-500 shadow-2xl relative">
+
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+
+            <div className="relative grid md:grid-cols-2 gap-8 p-8">
+
+              <div>
+                <p className="text-blue-100 uppercase tracking-widest text-sm">
+                  Total Files
+                </p>
+
+                <h2 className="text-6xl font-black mt-2">
+                  {files.length}
+                </h2>
+
+                <p className="text-blue-100 mt-4">
+                  Files stored securely
+                </p>
+              </div>
+
+              <div className="md:text-right">
+
+                <p className="text-blue-100 uppercase tracking-widest text-sm">
+                  Storage
+                </p>
+
+                <h2 className="text-4xl font-bold mt-2">
+                  Secure Cloud
+                </h2>
+
+                <p className="text-blue-100 mt-4">
+                  AES Encrypted
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
 
         </div>
-      </div>
 
-      {/* Main */}
-      <div className="max-w-5xl mx-auto p-6">
+        {/* Files */}
+        <section className="rounded-3xl bg-white/5 backdrop-blur-xl border border-blue-500/20 p-8 shadow-2xl">
 
-        <UploadForm onUpload={handleUpload} />
+          <div className="flex justify-between items-center mb-8">
 
-        <div className="mt-8">
+            <div>
 
-          <h2 className="text-2xl font-bold mb-4">
-            My Files
-          </h2>
+              <h2 className="text-3xl font-bold">
+                My Files
+              </h2>
+
+              <p className="text-blue-200 mt-1">
+                Manage your uploaded documents
+              </p>
+
+            </div>
+
+            <span className="bg-blue-600/20 border border-blue-500/30 px-5 py-2 rounded-full text-blue-300 font-semibold">
+              {files.length} Files
+            </span>
+
+          </div>
 
           {loading ? (
-            <p>Loading...</p>
+            <div className="text-center py-20 text-blue-300 text-lg">
+              Loading...
+            </div>
           ) : files.length === 0 ? (
-            <p>No files uploaded yet.</p>
+            <div className="text-center py-24">
+
+              <div className="text-7xl mb-4">
+                📂
+              </div>
+
+              <h3 className="text-2xl font-bold mb-2">
+                No Files Yet
+              </h3>
+
+              <p className="text-blue-200">
+                Upload your first file to get started.
+              </p>
+
+            </div>
           ) : (
-            <div className="space-y-4">
+            <div className="grid gap-5">
               {files.map((file) => (
                 <FileCard
                   key={file._id}
@@ -136,10 +192,10 @@ function Dashboard() {
               ))}
             </div>
           )}
+        </section>
 
-        </div>
+      </main>
 
-      </div>
     </div>
   );
 }
