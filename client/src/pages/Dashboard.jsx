@@ -47,7 +47,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-slate-950 to-blue-950 text-white">
+    <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-br from-black via-slate-950 to-blue-950 text-white">
 
       {/* Background Glow */}
       <div className="fixed top-0 left-0 w-96 h-96 bg-blue-600/20 blur-[180px] rounded-full"></div>

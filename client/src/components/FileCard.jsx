@@ -10,41 +10,41 @@ import {
 function FileCard({ file, onDelete }) {
   const formatSize = (size) => {
     if (!size) return "0 B";
-    if (size < 1024) return size + " B";
-    if (size < 1024 * 1024) return (size / 1024).toFixed(2) + " KB";
-    return (size / (1024 * 1024)).toFixed(2) + " MB";
+    if (size < 1024) return `${size} B`;
+    if (size < 1024 * 1024) return `${(size / 1024).toFixed(2)} KB`;
+    return `${(size / (1024 * 1024)).toFixed(2)} MB`;
   };
 
   const isImage = file.fileType?.startsWith("image/");
   const isPdf = file.fileType === "application/pdf";
 
   return (
-    <div className="bg-slate-900/70 backdrop-blur-md border border-blue-500/20 rounded-2xl p-5 hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-500/20 transition-all duration-300">
+    <div className="w-full rounded-2xl border border-blue-500/20 bg-slate-900/70 backdrop-blur-md p-4 sm:p-5 shadow-lg hover:border-blue-400 transition-all duration-300">
 
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+      <div className="flex flex-col gap-5">
 
-        {/* Left */}
-        <div className="flex items-center gap-4 min-w-0">
+        {/* File Info */}
+        <div className="flex items-start gap-4 w-full">
 
-          <div className="w-14 h-14 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 flex items-center justify-center shrink-0">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500">
 
             {isPdf ? (
-              <FaFilePdf className="text-white text-2xl" />
+              <FaFilePdf className="text-2xl text-white" />
             ) : isImage ? (
-              <FaFileImage className="text-white text-2xl" />
+              <FaFileImage className="text-2xl text-white" />
             ) : (
-              <FaFileAlt className="text-white text-2xl" />
+              <FaFileAlt className="text-2xl text-white" />
             )}
 
           </div>
 
           <div className="min-w-0 flex-1">
 
-            <h3 className="text-white font-semibold truncate text-lg">
+            <h3 className="break-all text-lg font-semibold text-white">
               {file.fileName}
             </h3>
 
-            <p className="text-blue-200 text-sm mt-1">
+            <p className="mt-1 text-sm text-blue-200">
               {formatSize(file.fileSize)}
             </p>
 
@@ -52,43 +52,42 @@ function FileCard({ file, onDelete }) {
 
         </div>
 
-        {/* Right */}
-        <div className="w-full lg:w-auto">
+        {/* Buttons */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {/* Preview */}
+          <a
+            href={file.fileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 font-medium text-white transition hover:bg-blue-500"
+          >
+            <FaEye />
+            Preview
+          </a>
 
-            {/* Preview */}
-            <a
-              href={file.fileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-3 rounded-xl transition font-medium"
-            >
-              <FaEye />
-              <span>Preview</span>
-            </a>
+          {/* Download */}
+          <a
+            href={file.fileUrl.replace(
+              "/upload/",
+              "/upload/fl_attachment/"
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-600 py-3 font-medium text-white transition hover:bg-green-500"
+          >
+            <FaDownload />
+            Download
+          </a>
 
-            {/* Download */}
-            <a
-              href={file.fileUrl.replace("/upload/", "/upload/fl_attachment/")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white px-4 py-3 rounded-xl transition font-medium"
-            >
-              <FaDownload />
-              <span>Download</span>
-            </a>
-
-            {/* Delete */}
-            <button
-              onClick={() => onDelete(file._id)}
-              className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white px-4 py-3 rounded-xl transition font-medium"
-            >
-              <FaTrash />
-              <span>Delete</span>
-            </button>
-
-          </div>
+          {/* Delete */}
+          <button
+            onClick={() => onDelete(file._id)}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-red-600 py-3 font-medium text-white transition hover:bg-red-500"
+          >
+            <FaTrash />
+            Delete
+          </button>
 
         </div>
 
